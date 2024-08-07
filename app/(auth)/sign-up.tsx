@@ -1,10 +1,11 @@
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../../constants";
 import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { createUser } from "../../lib/appwrite";
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -14,7 +15,23 @@ const SignUp = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const handleSubmit = () => {};
+
+  const handleSubmit = async () => {
+    if (!form.username || !form.email || !form.password) {
+      Alert.alert("Error", "Please fill in all fields.");
+    }
+    setIsSubmitting(true);
+    try {
+      const result = await createUser({email: form.email,password:form.password,username:form.username});
+      // router.replace('/home')
+    } catch (error) {
+      router.replace('/home')
+      // console.log(error);
+      // Alert.alert("Error", "error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -51,8 +68,8 @@ const SignUp = () => {
             otherStyles="mt-7"
           />
           <CustomButton
-            title="Sign In"
-            handlePress={() => handleSubmit}
+            title="Sign Up"
+            handlePress={() => handleSubmit()}
             containerStyles="w-full mt-7"
             isLoading={isSubmitting}
           />
