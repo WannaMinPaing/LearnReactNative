@@ -10,6 +10,15 @@ export const config = {
     storageId : "66b10c0c001ac468bdfa"
  }
 
+const {
+    endpoint,
+    platform,
+    projectId,
+    databaseId, 
+    userCollectionId, 
+    videoCollectionId,
+    storageId,
+} = config
 
 const client = new Client();
 client.setEndpoint(config.endpoint)
@@ -88,5 +97,20 @@ export const getCurrentUser = async () => {
     } catch (error) {
         console.log(error);
         throw error; // Rethrow the error to handle it outside of this function if needed
+    }
+}
+
+export const getAllPosts = async () => {
+    try{
+        const posts = await databases.listDocuments(
+            databaseId,
+            videoCollectionId
+        )
+        return posts.documents;
+    }catch (error){
+        if(error instanceof Error){
+            console.log(error.message);
+            throw new Error(error.message)
+        }
     }
 }
