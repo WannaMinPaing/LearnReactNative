@@ -1,6 +1,7 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { icons, images } from "@/constants";
+import { AVPlaybackStatus, AVPlaybackStatusSuccess, ResizeMode, Video } from "expo-av";
 
 const VideoCard = ({
   title,
@@ -39,14 +40,25 @@ const VideoCard = ({
             <Image source={icons.menu} className="w-5 h-5" resizeMode="contain" />
             </View>
         </View>
-      {play ? <Text className="text-white">Playing</Text> : 
-        <TouchableOpacity 
-            activeOpacity={0.7} 
-            onPress={() => setPlay(true)}
-            className="w-full h-60 roundec-xl mt-3 relative justify-center items-center">
-            <Image source={{uri:thumbnail}} className="w-full h-full rounded-xl mt-3" resizeMode="cover" />
-            <Image source={icons.play} className="w-12 h-12 absolute " resizeMode="contain"  />
-        </TouchableOpacity>}
+      {play ? <Video
+                  source={{ uri: video }}
+                  className="w-full h-60 rounded-xl"
+                  resizeMode={ResizeMode.CONTAIN}
+                  useNativeControls
+                  shouldPlay
+                  onPlaybackStatusUpdate={(status: AVPlaybackStatus) => {
+                      if (status.isLoaded && (status as AVPlaybackStatusSuccess).didJustFinish) {
+                      setPlay(false);
+                      }
+                  }}
+              /> : 
+            <TouchableOpacity 
+                activeOpacity={0.7} 
+                onPress={() => setPlay(true)}
+                className="w-full h-60 roundec-xl mt-3 relative justify-center items-center">
+                <Image source={{uri:thumbnail}} className="w-full h-full rounded-xl mt-3" resizeMode="cover" />
+                <Image source={icons.play} className="w-12 h-12 absolute " resizeMode="contain"  />
+            </TouchableOpacity>}
     </View>
   );
 };

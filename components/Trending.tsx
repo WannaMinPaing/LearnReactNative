@@ -2,10 +2,12 @@ import { FlatList, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, V
 import React, { useEffect, useState } from 'react';
 import * as Animatable from "react-native-animatable";
 import { icons, images } from '@/constants';
+import { Video, ResizeMode, AVPlaybackStatus, AVPlaybackStatusSuccess} from 'expo-av'
 
 interface Post {
     $id: string;
     thumbnail: string;
+    video: string;
 }
 
 interface TrendingProps {
@@ -39,7 +41,18 @@ const TrendingItem = ({ activeItem, item }: { activeItem: string, item: Post }) 
             animation={ activeItem === item.$id ? zoomIn : zoomOut}
             duration={500}
         >
-            {play ? (<Text className='text-white'>Playing</Text>) :
+            {play ? (<Video
+                        source={{ uri: item.video }}
+                        className="w-52 h-72 rounded-[35px] mt-3 bg-white/10"
+                        resizeMode={ResizeMode.CONTAIN}
+                        useNativeControls
+                        shouldPlay
+                        onPlaybackStatusUpdate={(status: AVPlaybackStatus) => {
+                            if (status.isLoaded && (status as AVPlaybackStatusSuccess).didJustFinish) {
+                            setPlay(false);
+                            }
+                        }}
+                    />) :
                 (
                     <TouchableOpacity
                         className='relative justify-center items-center'
