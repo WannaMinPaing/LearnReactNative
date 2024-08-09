@@ -25,8 +25,6 @@ const Home = () => {
       try{
         const response = await getAllPosts();
         if (response) {
-          console.log("response");
-          console.log(response);
           setVideoData(response);
         } else {
           setVideoData([]);
@@ -69,7 +67,7 @@ const Home = () => {
               </View>
               <View className="mt-1.5"><Image source={images.logoSmall}  className="w-9 h-10" resizeMode="contain"/></View>
             </View>
-            <SearchInput />
+            <SearchInput initialQuery="" />
             <View className="w-full flex-1 pt-5 pb-8">
               <Text className="text-gray-100 text-lg font-normal mb-3">Lastest Videos</Text>
               <Trending posts={ videoData ?? []} />

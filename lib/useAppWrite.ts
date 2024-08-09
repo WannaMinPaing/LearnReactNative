@@ -36,8 +36,6 @@ const useAppWrite = (fn : FetchVideosFunction) => {
           } 
         }finally{
           setIsLoading(false);
-          console.log("videoData")
-          console.log(videoData)
         }
       }
     },[])

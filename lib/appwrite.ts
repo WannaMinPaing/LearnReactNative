@@ -115,3 +115,18 @@ export const getAllPosts = async () => {
     }
 }
 
+export const searchPosts = async (query:string) => {
+    try{
+        const posts = await databases.listDocuments(
+            databaseId,
+            videoCollectionId,
+            [Query.search('title',query)]
+        )
+        return posts.documents;
+    }catch (error){
+        if(error instanceof Error){
+            console.log(error.message);
+            throw new Error(error.message)
+        }
+    }
+}
